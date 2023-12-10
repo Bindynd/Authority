@@ -1,7 +1,9 @@
 package org.bin.authority.dao;
 
-import org.bin.authority.entity.Permission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.bin.authority.entity.Permission;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +14,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2023-12-07
  */
 public interface PermissionMapper extends BaseMapper<Permission> {
+    /**
+     * 根据用户ID查询权限列表
+     * @param userId
+     * @return
+     */
+    List<Permission> findPermissionListByUserId(Long userId);
 
 }

@@ -1,7 +1,9 @@
 package org.bin.authority.service;
 
-import org.bin.authority.entity.Permission;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.bin.authority.entity.Permission;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +14,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2023-12-07
  */
 public interface PermissionService extends IService<Permission> {
-
+    /**
+     * 根据用户ID查询权限列表
+     * @param userId
+     * @return
+     */
+    List<Permission> findPermissionListByUserId(Long userId);
 }
