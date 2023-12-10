@@ -3,6 +3,7 @@ package org.bin.authority.config.security.handler;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import io.jsonwebtoken.Jwts;
+import org.bin.authority.config.redis.RedisService;
 import org.bin.authority.entity.User;
 import org.bin.authority.utils.JwtUtils;
 import org.bin.authority.utils.LoginResult;
@@ -26,6 +27,8 @@ import java.nio.charset.StandardCharsets;
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     @Resource
     private JwtUtils jwtUtils;
+    @Resource
+    private RedisService redisService;
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         //设置客户端的响应的内容类型
@@ -34,6 +37,9 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         User user = (User) authentication.getPrincipal();
         //生成token
         String token = jwtUtils.generateToken(user);
+        //把生成的token存到redis
+        String tokenKey = "token_"+token;
+        redisService.set(tokenKey,token,jwtUtils.getExpiration() / 1000);
         //设置token签名密钥及过期时间
         long expireTime = Jwts.parser() //获取DefaultJwtParser对象
                 .setSigningKey(jwtUtils.getSecret()) //设置签名的密钥
